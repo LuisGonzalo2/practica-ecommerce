@@ -1,26 +1,25 @@
-# Dockerfile
-FROM node:22-alpine
+# --- ETAPA 1: Compilación de React ---
+FROM node:22-alpine AS build
 
-# Crear directorio de la aplicación
 WORKDIR /usr/src/app
 
-# Copiar archivos de configuración de dependencias
+# Copiar archivos de dependencias
 COPY package*.json ./
 
-# Copiar los datos y el archivo de pruebas necesarios para Jest
-COPY users.json ./
-# Copiar la carpeta completa de pruebas 'test' al contenedor
-COPY tests/ ./test/
-
-
-# Copiar el código principal de la aplicación
-COPY index.js .
-
-# Usar Yarn para instalar dependencias (incluyendo Jest y Supertest)
+# Instalar dependencias con Yarn para evitar bloqueos en Windows
 RUN yarn install --frozen-lockfile || yarn install
 
-# Exponer el puerto de la aplicación
-EXPOSE 3000
+# Copiar el resto del código y compilar para producción
+COPY . .
+RUN yarn build
 
-# Comando para iniciar la aplicación
-CMD ["node", "index.js"]
+# --- ETAPA 2: Servidor de Producción con Nginx ---
+FROM nginx:1.25-alpine
+
+# Copiar los archivos estáticos generados por Vite (dist) a la carpeta de Nginx
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
+# Exponer el puerto por defecto de Nginx
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

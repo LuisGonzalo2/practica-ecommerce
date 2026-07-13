@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Mantiene la compatibilidad de comunicación con Docker Desktop en Windows 11
+        // Compatibilidad con Docker Desktop de Windows 11
         DOCKER_API_VERSION = '1.40'
     }
 
@@ -11,29 +11,22 @@ pipeline {
     }
 
     stages {
-        stage('Construir Imagen Docker') {
+        stage('Construir Imagen de React') {
             steps {
-                // Se construye la imagen aislada usando Yarn incorporado en el Dockerfile
-                sh 'docker build -t hola-mundo-node:latest .'
+                // Construye la imagen de producción usando Nginx
+                sh 'docker build -t e-commerce-react:latest .'
             }
         }
 
-        stage('Ejecutar tests') {
-            steps {
-                // Ejecuta los tests de Jest usando la imagen limpia que se acaba de compilar
-                sh 'docker run --rm hola-mundo-node:latest yarn test'
-            }
-        }
-
-        stage('Ejecutar Contenedor Node.js') {
+        stage('Desplegar E-commerce') {
             steps {
                 sh '''
-                    # Detener y eliminar cualquier contenedor previo con el mismo nombre
-                    docker stop hola-mundo-node || true
-                    docker rm hola-mundo-node || true
+                    # Detener y eliminar versiones anteriores si existen
+                    docker stop e-commerce-container || true
+                    docker rm e-commerce-container || true
 
-                    # Ejecutar el nuevo contenedor de la aplicación en producción
-                    docker run -d --name hola-mundo-node -p 3000:3000 hola-mundo-node:latest
+                    # Ejecutar el nuevo contenedor mapeando el puerto 80 de Nginx al puerto 8081 de tu Windows 11
+                    docker run -d --name e-commerce-container -p 8081:80 e-commerce-react:latest
                 '''
             }
         }
