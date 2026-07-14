@@ -9,7 +9,7 @@ export default function Home() {
       {/* Encabezado de la sección */}
       <div className="mb-8">
         <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Catálogo</p>
-        <h1 className="text-2xl font-semibold">Productos destacados - testajntajntoantalntlakt</h1>
+        <h1 className="text-2xl font-semibold">Productos destacados</h1>
       </div>
 
       {/* Grilla responsiva: 2 columnas en móvil, hasta 4 en escritorio */}
