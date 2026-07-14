@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { preparePayment, confirmPayment } from './payphone'
 
-describe('preparePayment', () => {
+describe('Servicio de pagos Payphone', () => {
   const form = { telefono: '0991234567', email: 'test@example.com' }
 
   beforeEach(() => {
     global.fetch = vi.fn()
   })
 
-  it('calcula el monto total como la suma exacta de sus componentes', async () => {
+  it('✅ El monto total enviado a Payphone coincide con subtotal + IVA', async () => {
     global.fetch.mockResolvedValue({
       ok: true,
       json: async () => ({ payWithCard: 'url', paymentId: 1 })
@@ -20,7 +20,7 @@ describe('preparePayment', () => {
     expect(sentBody.amount).toBe(sentBody.amountWithTax + sentBody.amountWithoutTax + sentBody.tax)
   })
 
-  it('lanza un error cuando Payphone responde con fallo', async () => {
+  it('❌ Si Payphone rechaza el pago, se lanza un error con el mensaje correcto', async () => {
     global.fetch.mockResolvedValue({
       ok: false,
       json: async () => ({ message: 'Monto inválido' })

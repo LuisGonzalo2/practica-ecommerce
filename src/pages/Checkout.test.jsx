@@ -12,14 +12,14 @@ vi.mock('../context/CartContext', () => ({
   }),
 }))
 
-describe('Checkout', () => {
+describe('Página de Checkout', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     delete window.location
     window.location = { href: '' }
   })
 
-  it('llama a preparePayment y redirige a la URL de pago al hacer clic', async () => {
+  it('✅ Al completar el formulario y pagar, redirige al usuario al formulario de Payphone', async () => {
     preparePayment.mockResolvedValue({ payWithCard: 'https://pay.payphone.test/form/abc' })
 
     render(<Checkout />)

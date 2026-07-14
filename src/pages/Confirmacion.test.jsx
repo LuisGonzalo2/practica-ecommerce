@@ -7,8 +7,8 @@ vi.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }))
 vi.mock('../services/payphone', () => ({ confirmPayment: vi.fn() }))
 vi.mock('../context/CartContext', () => ({ useCart: () => ({ setCart: vi.fn() }) }))
 
-describe('Confirmacion', () => {
-  it('redirige al inicio si no vienen los parámetros de Payphone', () => {
+describe('Página de Confirmación', () => {
+  it('✅ Si un usuario llega sin parámetros de Payphone, se le redirige al inicio (evita accesos directos)', () => {
     render(<Confirmacion />)
     expect(mockNavigate).toHaveBeenCalledWith('/')
   })
