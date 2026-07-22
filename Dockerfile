@@ -3,7 +3,7 @@ FROM node:22-alpine AS build
 
 WORKDIR /usr/src/app
 
-# Copiar archivos de dependencias dependidas :p
+# Copiar archivos de dependencias 
 COPY package*.json ./
 
 # Instalar dependencias con Yarn para evitar bloqueos en Windows
